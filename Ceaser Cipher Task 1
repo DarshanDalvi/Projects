@@ -1,0 +1,74 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def caesar_cipher_encrypt(text, shift):
+    encrypted_text = ""
+    for char in text:
+        # Encrypt uppercase letters
+        if char.isupper():
+            encrypted_text += chr((ord(char) + shift - 65) % 26 + 65)
+        # Encrypt lowercase letters
+        elif char.islower():
+            encrypted_text += chr((ord(char) + shift - 97) % 26 + 97)
+        else:
+            encrypted_text += char  # If it's not a letter, keep it unchanged
+    return encrypted_text
+
+def caesar_cipher_decrypt(text, shift):
+    decrypted_text = ""
+    for char in text:
+        # Decrypt uppercase letters
+        if char.isupper():
+            decrypted_text += chr((ord(char) - shift - 65) % 26 + 65)
+        # Decrypt lowercase letters
+        elif char.islower():
+            decrypted_text += chr((ord(char) - shift - 97) % 26 + 97)
+        else:
+            decrypted_text += char  # If it's not a letter, keep it unchanged
+    return decrypted_text
+
+def encrypt_text():
+    text = entry_text.get("1.0", "end-1c")
+    shift = int(entry_shift.get())
+    encrypted_text = caesar_cipher_encrypt(text, shift)
+    entry_result.delete("1.0", "end")
+    entry_result.insert("1.0", encrypted_text)
+
+def decrypt_text():
+    text = entry_text.get("1.0", "end-1c")
+    shift = int(entry_shift.get())
+    decrypted_text = caesar_cipher_decrypt(text, shift)
+    entry_result.delete("1.0", "end")
+    entry_result.insert("1.0", decrypted_text)
+
+# Create the main window
+window = tk.Tk()
+window.title("Caesar Cipher Encryption/Decrypt")
+
+# Create widgets
+label_text = tk.Label(window, text="Enter text:")
+label_text.grid(row=0, column=0, padx=10, pady=5, sticky="w")
+
+entry_text = tk.Text(window, height=5, width=50)
+entry_text.grid(row=0, column=1, columnspan=2, padx=10, pady=5)
+
+label_shift = tk.Label(window, text="Enter shift (0-25):")
+label_shift.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+
+entry_shift = tk.Entry(window)
+entry_shift.grid(row=1, column=1, padx=10, pady=5)
+
+button_encrypt = tk.Button(window, text="Encrypt", command=encrypt_text)
+button_encrypt.grid(row=1, column=2, padx=10, pady=5)
+
+button_decrypt = tk.Button(window, text="Decrypt", command=decrypt_text)
+button_decrypt.grid(row=1, column=3, padx=10, pady=5)
+
+label_result = tk.Label(window, text="Result:")
+label_result.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+
+entry_result = tk.Text(window, height=5, width=50)
+entry_result.grid(row=2, column=1, columnspan=2, padx=10, pady=5)
+
+# Start the main loop
+window.mainloop()
